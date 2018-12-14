@@ -1,0 +1,47 @@
+body {
+    text-align: center;
+    background: #16222a; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #16222a, #3a6073); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #16222a, #3a6073);
+}
+
+h1 {
+    color: white;
+    font-family: 'Dosis', sans-serif;
+    font-size: 65px;
+}
+
+p {
+    color: white;
+    font-family: 'Indie Flower', cursive;
+    font-size: 25px;
+}
+
+.button {
+    background-color: rgb(226, 157, 0);
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color:rgba(247, 181, 0, 0.836); 
+    color: white; 
+    border: 2px solid rgba(247, 181, 0, 0.836);
+}
+
+input[type=text] {
+  width: 20%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
