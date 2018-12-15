@@ -1,5 +1,5 @@
 let userName;
-let time;
+let time; 
 const timeout = 30000;
 let log = 'Eliza: Hi, there! What is your name?<br>';
 let logger
@@ -180,14 +180,16 @@ const handleNew = () => {
 // Hanldes displaying the HTML for the chat.
 const handleResponse = () => {
     document.getElementById("index").innerHTML = `<h1>Hi, <span id="userName"></span></h1>
-    <p id="log"></p>
+    
     <p id="currAnswer"></p>
     <p id="currQuestion"></p>
     <input id="userInput" type="text" value="">
     <button class="button" onclick="handleChat()" id="submit">Submit</button>
     <br><br>
     <input class="button" onclick="handleDict(), stopCountDown()" type="submit" value="New Dictionary"/>
-    <input class="button" onclick="handleNew()" type="submit" value="Clear Conversation"/>`;
+    <input class="button" onclick="handleNew()" type="submit" value="Clear Conversation"/><br>
+    <input class="logBtn" onclick="showLog()" type="submit" value="Show Log"/>
+    <p class="log" id="log"></p>`;
 
     let input = document.getElementById("userInput");
     handleInput(input);
@@ -224,7 +226,7 @@ const newChat = () => {
     handleResponse();
     handleTimer();
 
-    if (!prevUser) {
+    if(!prevUser) {
         let keyWords = dictionary.getKeywords('welcome');
         const currAnswer = `Nice to meet you, ${userName}!`;
         const currQuestion = dictionary.getQuestion(keyWords);
@@ -232,24 +234,24 @@ const newChat = () => {
         logger = handleLog(currAnswer, currQuestion, userName);
 
         document.getElementById("userName").innerHTML = userName;
-        document.getElementById("log").innerHTML = logger;
+        
         document.getElementById("currAnswer").innerHTML = currAnswer;
         document.getElementById("currQuestion").innerHTML = currQuestion;
     } else {
         let lastAns = localStorage.getItem("lastAnswer");
         let lastQues = localStorage.getItem("lastQuestion");
-
+        
         document.getElementById("userName").innerHTML = userName;
-        document.getElementById("log").innerHTML = localStorage.getItem(userName);
+        
         document.getElementById("currAnswer").innerHTML = lastAns;
         document.getElementById("currQuestion").innerHTML = lastQues;
     }
 }
 
-// Clears state of the application. 
+ // Clears state of the application. 
 const clear = () => {
-    localStorage.removeItem(userName);
-    log = "";
+        localStorage.removeItem(userName);
+        log = "";
 }
 
 // Begins timer countdown.
@@ -290,7 +292,7 @@ const timer = () => {
     const currQuestion = getTimerQuestion(userName);
     document.getElementById("userName").innerHTML = userName;
     document.getElementById("currQuestion").innerHTML = currQuestion;
-    handleLog("", currQuestion, userInput);
+    handleLog("",currQuestion, userInput);
 }
 
 //  Handles all chat messages.
@@ -303,12 +305,12 @@ const handleChat = () => {
     const currAnswer = dictionary.getAnswer(keyWords);
     const currQuestion = dictionary.getQuestion(keyWords);
 
-    localStorage.setItem("lastAnswer", currAnswer);
-    localStorage.setItem("lastQuestion", currQuestion);
+    sessionStorage.setItem("lastAnswer", currAnswer);
+    sessionStorage.setItem("lastQuestion", currQuestion);
+
     logger = handleLog(currAnswer, currQuestion, userInput);
 
     document.getElementById("userName").innerHTML = userName;
-    document.getElementById("log").innerHTML = logger;
     document.getElementById("currAnswer").innerHTML = currAnswer;
     document.getElementById("currQuestion").innerHTML = currQuestion;
 
@@ -316,7 +318,6 @@ const handleChat = () => {
         clear();
     }
 }
-
 
 //  Checks if username was a previous user.
 const checkUser = () => {
@@ -331,23 +332,61 @@ const checkUser = () => {
     }
 }
 
+// Shows the conversation log with Eliza
+const showLog = () => {
+    if (typeof logger !== 'undefined') {
+
+        document.getElementById("index").innerHTML = `<h1>Hi, <span id="userName"></span></h1>
+            <p id="currAnswer"></p>
+            <p id="currQuestion"></p>
+            <input id="userInput" type="text" value="">
+            <button class="button" onclick="handleChat()" id="submit">Submit</button>
+            <br><br>
+            <input class="button" onclick="handleDict(), stopCountDown()" type="submit" value="New Dictionary"/>
+            <input class="button" onclick="handleNew()" type="submit" value="Clear Conversation"/><br>
+            <input class="logBtn" onclick="hideLog()" type="submit" value="Hide Log"/>
+            <p class="log" id="log"></p>`;
+        document.getElementById("userName").innerHTML = userName;
+        document.getElementById("currAnswer").innerHTML = sessionStorage.getItem("lastAnswer");
+        document.getElementById("currQuestion").innerHTML = sessionStorage.getItem("lastQuestion");
+        document.getElementById("log").innerHTML = logger;
+    }
+}
+
+// Hides the conversation log with Eliza
+const hideLog = () => {
+    document.getElementById("index").innerHTML = `<h1>Hi, <span id="userName"></span></h1>
+        <p id="currAnswer"></p>
+        <p id="currQuestion"></p>
+        <input id="userInput" type="text" value="">
+        <button class="button" onclick="handleChat()" id="submit">Submit</button>
+        <br><br>
+        <input class="button" onclick="handleDict(), stopCountDown()" type="submit" value="New Dictionary"/>
+        <input class="button" onclick="handleNew()" type="submit" value="Clear Conversation"/><br>
+        <input class="logBtn" onclick="showLog()" type="submit" value="Show Log"/>
+        <p class="log" id="log"></p>`;
+    document.getElementById("userName").innerHTML = userName;
+    document.getElementById("currAnswer").innerHTML = sessionStorage.getItem("lastAnswer");
+    document.getElementById("currQuestion").innerHTML = sessionStorage.getItem("lastQuestion");
+}
+
 //  Documents the received user response and the next answer/question.
 //  @param  currAnswer      The current answer to respond with
 //  @param  currQuestion    The current question to ask
 //  @param  input           The user's most recent response
-function handleLog(currAnswer, currQuestion, input) {
-    if (!input && currAnswer) {
-        log = log + `Eliza: ${currAnswer}<br> Eliza: ${currQuestion}<br>`;
+function handleLog(currAnswer, currQuestion, input){
+    if(!input && currAnswer) {
+        log = log + `<span id="logger">Eliza:</span> ${currAnswer}<br> <span id="logger">Eliza:</span>  ${currQuestion}<br>`;
     } else if (!input && !currAnswer) {
         log = log;
-    } else if (!input) {
-        log = log + `Eliza: ${currQuestion}<br>`;
-    } else {
-        log = log + `${userName}: ${input}<br>`;
-        log = log + `Eliza: ${currAnswer}<br> Eliza: ${currQuestion}<br>`;
+    }else if (!input) {
+        log = log + `<span id="logger">Eliza:</span>  ${currQuestion}<br>`;
+    }else {
+        log = log + `<span id="logger">${userName}:</span> ${input}<br>`;
+        log = log + `<span id="logger">Eliza:</span>  ${currAnswer}<br> <span id="logger">Eliza:</span>  ${currQuestion}<br>`;
     }
     localStorage.setItem(userName, log);
-
+    
     return log;
 }
 

@@ -26,14 +26,43 @@ p {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin: 4px 2px;
+    margin: 10px 2px;
     cursor: pointer;
 }
+
+.logBtn {
+    background-color: rgb(226, 157, 0);
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 25px 2px;
+    cursor: pointer;
+}
+
+.logBtn:hover {
+    background-color:rgba(247, 181, 0, 0.836); 
+    color: white; 
+    border: 2px solid rgba(247, 181, 0, 0.836);    
+}
+
 
 .button:hover {
     background-color:rgba(247, 181, 0, 0.836); 
     color: white; 
     border: 2px solid rgba(247, 181, 0, 0.836);
+}
+
+.log {
+     color: rgba(255, 174, 0, 0.705); 
+}
+
+#logger {
+    color: rgb(255, 208, 0);
+    font-weight: bold;
 }
 
 input[type=text] {
@@ -44,4 +73,7 @@ input[type=text] {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+  font-size:16px;
 }
+
+
