@@ -1,11 +1,10 @@
 let userName;
-let time; 
+let time;
 const timeout = 30000;
 let log = 'Eliza: Hi, there! What is your name?<br>';
 let logger
 let prevUser;
 let userAnswers = [];
-let searchHistory = [];
 const defaultDict = {
     "dictionary_name": "default",
     "entries":
@@ -225,7 +224,7 @@ const newChat = () => {
     handleResponse();
     handleTimer();
 
-    if(!prevUser) {
+    if (!prevUser) {
         let keyWords = dictionary.getKeywords('welcome');
         const currAnswer = `Nice to meet you, ${userName}!`;
         const currQuestion = dictionary.getQuestion(keyWords);
@@ -239,7 +238,7 @@ const newChat = () => {
     } else {
         let lastAns = localStorage.getItem("lastAnswer");
         let lastQues = localStorage.getItem("lastQuestion");
-        
+
         document.getElementById("userName").innerHTML = userName;
         document.getElementById("log").innerHTML = localStorage.getItem(userName);
         document.getElementById("currAnswer").innerHTML = lastAns;
@@ -247,12 +246,10 @@ const newChat = () => {
     }
 }
 
- // Clears state of the application. 
+// Clears state of the application. 
 const clear = () => {
-        localStorage.removeItem(userName);
-        sessionStorage.removeItem('history');
-        sessionStorage.removeItem('search');
-        log = "";
+    localStorage.removeItem(userName);
+    log = "";
 }
 
 // Begins timer countdown.
@@ -293,74 +290,7 @@ const timer = () => {
     const currQuestion = getTimerQuestion(userName);
     document.getElementById("userName").innerHTML = userName;
     document.getElementById("currQuestion").innerHTML = currQuestion;
-    handleLog("",currQuestion, userInput);
-}
-
-//  Places all user response in session storage.
-//  @param  input           The user's most recent response
-function handleSearch(input) {
-    userAnswers.push(`${input}`);
-
-    sessionStorage.setItem('search', JSON.stringify(userAnswers));
-}
-
-//  Handles the special search operation.
-//  @param  input           The user's most recent response
-const search = (input) => {
-    let search = input.search('/search');
-
-    if (search !== -1) {
-        let searchWord = input.split("/search ").pop();
-        searchHistory.push(searchWord);
-        sessionStorage.setItem('history', JSON.stringify(searchHistory));
-        let array = JSON.parse(sessionStorage.getItem('search'));
-        let inArray = searchStringInArray(searchWord, array);
-
-        if(inArray !== input) {
-            document.getElementById('userInput').setAttribute("value", inArray);
-            document.getElementById("userName").innerHTML = userName;
-            document.getElementById("log").innerHTML = handleLog();
-            document.getElementById("currAnswer").innerHTML = localStorage.getItem("lastAnswer");
-            document.getElementById("currQuestion").innerHTML = localStorage.getItem("lastQuestion");
-        } else {
-            alert('No search results found');
-            document.getElementById('userInput').setAttribute("value", "");    
-            document.getElementById("userName").innerHTML = userName;
-            document.getElementById("log").innerHTML = handleLog();
-            document.getElementById("currAnswer").innerHTML = localStorage.getItem("lastAnswer");
-            document.getElementById("currQuestion").innerHTML = localStorage.getItem("lastQuestion");       
-        }
-    }    
-}
-
-//  Stores the search operation in session storage.
-//  @param  str           String being checked
-//  @param  strArray      String Array
-const searchStringInArray = (str, strArray) => {
-    for (var j = 0; j < strArray.length; j++) {
-        if (strArray[j].match(str)) {
-            return strArray[j];
-        }   
-    }
-}
-
-//  Stores the search operation in session storage.
-//  @param  input           The user's most recent response
-const history = (input) => {
-    let history = input.search('/history');
-    if (history !== -1) {
-        historyWord = input.split("/search ").pop();
-        let histArray = JSON.parse(sessionStorage.getItem('history'));
-        let tempString ='<strong>Search History: </strong><ul>';
-        for (let i=0; i<histArray.length; i++) {
-            tempString = tempString + (`<li>${histArray[i]}</li>`);
-        }
-        tempString += '</ul>';
-        document.getElementById('log').innerHTML = (tempString);
-        document.getElementById("userName").innerHTML = userName;
-        document.getElementById("currAnswer").innerHTML = localStorage.getItem("lastAnswer");
-        document.getElementById("currQuestion").innerHTML = localStorage.getItem("lastQuestion");
-    }
+    handleLog("", currQuestion, userInput);
 }
 
 //  Handles all chat messages.
@@ -368,32 +298,25 @@ const handleChat = () => {
     let userInput = document.getElementById('userInput').value;
     handleResponse();
     handleTimer(userInput);
-    if (userInput.search('/search') !== -1) {
-        handleSearch(userInput);
-        search(userInput);
-    } else if (userInput.search('/history') !== -1) {
-        history(userInput);
-    } else if (userInput.search(userInput !== '/clear')) {
-        let keyWords = dictionary.getKeywords(userInput);
-        const currAnswer = dictionary.getAnswer(keyWords);
-        const currQuestion = dictionary.getQuestion(keyWords);
 
-        localStorage.setItem("lastAnswer", currAnswer);
-        localStorage.setItem("lastQuestion", currQuestion);
-        handleSearch(userInput);
-        search(userInput);
-        logger = handleLog(currAnswer, currQuestion, userInput);
+    let keyWords = dictionary.getKeywords(userInput);
+    const currAnswer = dictionary.getAnswer(keyWords);
+    const currQuestion = dictionary.getQuestion(keyWords);
 
-        document.getElementById("userName").innerHTML = userName;
-        document.getElementById("log").innerHTML = logger;
-        document.getElementById("currAnswer").innerHTML = currAnswer;
-        document.getElementById("currQuestion").innerHTML = currQuestion;
-        history(userInput);
-        if (userInput === '/clear') {
-            clear();
-        }
+    localStorage.setItem("lastAnswer", currAnswer);
+    localStorage.setItem("lastQuestion", currQuestion);
+    logger = handleLog(currAnswer, currQuestion, userInput);
+
+    document.getElementById("userName").innerHTML = userName;
+    document.getElementById("log").innerHTML = logger;
+    document.getElementById("currAnswer").innerHTML = currAnswer;
+    document.getElementById("currQuestion").innerHTML = currQuestion;
+
+    if (userInput === '/clear') {
+        clear();
     }
 }
+
 
 //  Checks if username was a previous user.
 const checkUser = () => {
@@ -412,19 +335,19 @@ const checkUser = () => {
 //  @param  currAnswer      The current answer to respond with
 //  @param  currQuestion    The current question to ask
 //  @param  input           The user's most recent response
-function handleLog(currAnswer, currQuestion, input){
-    if(!input && currAnswer) {
+function handleLog(currAnswer, currQuestion, input) {
+    if (!input && currAnswer) {
         log = log + `Eliza: ${currAnswer}<br> Eliza: ${currQuestion}<br>`;
     } else if (!input && !currAnswer) {
         log = log;
-    }else if (!input) {
+    } else if (!input) {
         log = log + `Eliza: ${currQuestion}<br>`;
-    }else {
+    } else {
         log = log + `${userName}: ${input}<br>`;
         log = log + `Eliza: ${currAnswer}<br> Eliza: ${currQuestion}<br>`;
     }
     localStorage.setItem(userName, log);
-    
+
     return log;
 }
 
